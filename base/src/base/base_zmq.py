@@ -100,7 +100,6 @@ class ZmqSub(Thread):
 
     def run(self):
         while not self._stop_event.is_set():
-            self.__update_stat()
             if self.__restart:
                 try:
                     self._stop_action()
