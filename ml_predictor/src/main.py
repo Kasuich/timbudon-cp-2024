@@ -5,8 +5,8 @@ from time import perf_counter
 
 import grpc
 from inference import inference
-from inference_pb2 import InferenceReply, InferenceRequest
-from inference_pb2_grpc import InferenceServer, add_InferenceServerServicer_to_server
+from pb.inference_pb2 import InferenceReply, InferenceRequest
+from pb.inference_pb2_grpc import InferenceServer, add_InferenceServerServicer_to_server
 from PIL import Image
 
 logging.basicConfig(level=logging.INFO)
@@ -18,6 +18,8 @@ class InferenceService(InferenceServer):
         return image
 
     async def inference(self, request: InferenceRequest, context) -> InferenceReply:
+
+        # TODO: implement inference
         logging.info(f"Received request")
         start = perf_counter()
         images = list(map(self.open_image, request.image))

@@ -1,10 +1,8 @@
-// inference.proto
-
 syntax = "proto3";
 
 // The inference service definition.
 service InferenceServer {
-  // Sends a inference reply
+  // Sends an inference reply
   rpc inference (InferenceRequest) returns (InferenceReply) {}
 }
 
@@ -12,7 +10,7 @@ message InferenceRequest {
     repeated bytes image = 1;
 }
 
-// The response message containing the classes ids
+// The response message containing the class names
 message InferenceReply {
-    repeated uint32 pred = 1;
+    repeated string pred = 1;
 }

@@ -19,8 +19,11 @@ preprocess = T.Compose(
 
 
 @torch.no_grad()
-def inference(images: List[Image.Image]) -> List[int]:
+def inference(images: List[Image.Image]) -> List[str]:
     batch = torch.stack([preprocess(image) for image in images])
     logits = model(batch)
     preds = logits.argmax(dim=1).tolist()
-    return preds
+    str_preds = [str(pred) for pred in preds]
+    return str_preds
+
+    # TODO: impelement inference

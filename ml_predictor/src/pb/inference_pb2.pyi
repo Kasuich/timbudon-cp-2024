@@ -14,5 +14,5 @@ class InferenceRequest(_message.Message):
 class InferenceReply(_message.Message):
     __slots__ = ("pred",)
     PRED_FIELD_NUMBER: _ClassVar[int]
-    pred: _containers.RepeatedScalarFieldContainer[int]
-    def __init__(self, pred: _Optional[_Iterable[int]] = ...) -> None: ...
+    pred: _containers.RepeatedScalarFieldContainer[str]
+    def __init__(self, pred: _Optional[_Iterable[str]] = ...) -> None: ...
