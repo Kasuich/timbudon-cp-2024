@@ -1,0 +1,16 @@
+services:
+  ml_predictor:
+    build:
+      context: ./ml_predictor
+      dockerfile: Dockerfile
+    ports:
+      - "50052:50052"
+  
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile 
+    ports:
+      - "8000:8000"
+    depends_on:
+      - ml_predictor
