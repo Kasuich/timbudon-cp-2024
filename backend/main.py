@@ -17,7 +17,7 @@ logging.basicConfig(level=logging.INFO)
 
 
 async def send_grpc_request(image_bytes) -> str:
-    async with grpc.aio.insecure_channel("[::]:50052") as channel:
+    async with grpc.aio.insecure_channel("ml_predictor:50052") as channel:
         stub = InferenceServerStub(channel)
         start = perf_counter()
 
