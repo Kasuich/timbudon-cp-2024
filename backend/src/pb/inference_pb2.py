@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0finference.proto\"!\n\x10InferenceRequest\x12\r\n\x05image\x18\x01 \x03(\x0c\"\x1e\n\x0eInferenceReply\x12\x0c\n\x04pred\x18\x01 \x03(\r2D\n\x0fInferenceServer\x12\x31\n\tinference\x12\x11.InferenceRequest\x1a\x0f.InferenceReply\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0finference.proto\"!\n\x10InferenceRequest\x12\r\n\x05image\x18\x01 \x03(\x0c\"\x1e\n\x0eInferenceReply\x12\x0c\n\x04pred\x18\x01 \x03(\t2D\n\x0fInferenceServer\x12\x31\n\tinference\x12\x11.InferenceRequest\x1a\x0f.InferenceReply\"\x00\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)

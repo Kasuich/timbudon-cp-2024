@@ -47,7 +47,7 @@ class InferenceServerServicer(object):
     """
 
     def inference(self, request, context):
-        """Sends a inference reply
+        """Sends an inference reply
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')

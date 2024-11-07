@@ -7,8 +7,8 @@ from time import perf_counter
 import grpc
 import uvicorn
 from fastapi import FastAPI, File, UploadFile
-from inference_pb2 import InferenceReply, InferenceRequest
-from inference_pb2_grpc import InferenceServerStub
+from pb.inference_pb2 import InferenceReply, InferenceRequest
+from pb.inference_pb2_grpc import InferenceServerStub
 from PIL import Image
 
 app = FastAPI()
@@ -16,18 +16,18 @@ app = FastAPI()
 logging.basicConfig(level=logging.INFO)
 
 
-async def send_grpc_request(image_bytes):
+async def send_grpc_request(image_bytes) -> str:
     async with grpc.aio.insecure_channel("[::]:50052") as channel:
         stub = InferenceServerStub(channel)
         start = perf_counter()
 
         res: InferenceReply = await stub.inference(
-            InferenceRequest(image=[image_bytes, image_bytes])
+            InferenceRequest(image=[image_bytes])
         )
         logging.info(
             f"pred = {pformat(res.pred)} in {(perf_counter() - start) * 1000:.2f}ms"
         )
-        return str(res.pred)
+        return res.pred[0]
 
 
 @app.post("/predict/")
@@ -37,7 +37,7 @@ async def predict(file: UploadFile = File(...)):
     image.save(buffered, format="JPEG")
     image_bytes = buffered.getvalue()
 
-    prediction = await send_grpc_request(image_bytes)
+    prediction: str = await send_grpc_request(image_bytes)
     return {"prediction": prediction}
 
 
