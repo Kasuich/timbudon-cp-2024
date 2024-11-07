@@ -1,0 +1,6 @@
+grpcio==1.67.1
+grpcio-tools==1.67.1
+pillow==10.2.0
+--find-links https://download.pytorch.org/whl/torch_stable.html
+torch==2.3.1+cpu
+torchvision==0.18.1+cpu
