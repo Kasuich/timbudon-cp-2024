@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package image_recognition;
+
+message ImageRequest {
+    bytes image_data = 1;
+    bool search_flag = 2;
+}
+
+message ImageResponse {
+    string recognized_text = 1;
+    bytes marked_image = 2;
+
+    string attribute_1 = 3;
+    string attribute_2 = 4;
+    string attribute_3 = 5;
+}
+
+service ImageRecognitionService {
+    rpc RecognizeImage(ImageRequest) returns (ImageResponse);
+}
