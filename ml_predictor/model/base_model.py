@@ -30,3 +30,4 @@ class BaseModel(abc.ABC):
             If search_in_data is True, returns full data from excel
             If False, return only OCR result
         """
+        pass

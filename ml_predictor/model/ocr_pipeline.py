@@ -32,3 +32,5 @@ class OcrPipeline(BaseModel):
         df["ДетальАртикул"] = df["ДетальАртикул"].map(
             lambda x: x if "ТС" not in x else x.split()[0]
         )
+
+    # TODO: Do the rest
