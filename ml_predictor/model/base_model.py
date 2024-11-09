@@ -1,4 +1,5 @@
 import abc
+from dataclasses import dataclass
 from typing import List
 
 import torch
@@ -7,12 +8,23 @@ from PIL import Image
 from torchvision.models import ResNet34_Weights, resnet34
 
 
+@dataclass
+class PredictResult:
+    raw_text: str
+    # image in bytes with boxes and text on it
+    pred_img: str
+    # unknow data from excel, None if search_in_data is False
+    attribute1: str | None
+    attribute2: str | None
+    attribute3: str | None
+
+
 class BaseModel(abc.ABC):
 
     @abc.abstractmethod
     def predict(
         self, images: Image.Image, search_in_data: bool, dist_threshold: float
-    ) -> list[str]:
+    ) -> PredictResult:
         """Get predict from ML OCR Model
 
         Parameters
@@ -26,7 +38,7 @@ class BaseModel(abc.ABC):
 
         Returns
         -------
-        list[str]
+        PredictResult
             If search_in_data is True, returns full data from excel
             If False, return only OCR result
         """
