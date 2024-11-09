@@ -260,7 +260,7 @@ class OcrPipeline(BaseModel):
             
         # TODO: Вставить картинку, полученную на инференсе 
         res = PredictResult(
-            raw_text=result["Label_With_Text"],
+            raw_text=result["Label_With_Text"].iloc[0],
             pred_img=image_bytes,
         )
         return res

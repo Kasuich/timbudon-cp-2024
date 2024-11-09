@@ -39,9 +39,9 @@ class InferenceService(ImageRecognitionServiceServicer):
         response = ImageResponse()
         response.recognized_text = preds.raw_text
         response.marked_image = preds.pred_img
-        response.attribute_1 = preds.attribute1
-        response.attribute_2 = preds.attribute2
-        response.attribute_3 = preds.attribute3
+        response.attribute_1 = preds.attribute1 if preds.attribute1 else "" 
+        response.attribute_2 = preds.attribute2 if preds.attribute2 else ""
+        response.attribute_3 = preds.attribute3 if preds.attribute3 else ""
         return response
 
 
