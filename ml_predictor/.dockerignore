@@ -87,3 +87,8 @@ venv/
 
 # VS Code
 .vscode/
+
+# Weights for model in Ml Predictor 
+
+ml_predictor/models_and_logs
+ml_predictor/paddle_ocr_weights

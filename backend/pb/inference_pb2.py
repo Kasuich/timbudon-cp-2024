@@ -24,17 +24,17 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0finference.proto\"!\n\x10InferenceRequest\x12\r\n\x05image\x18\x01 \x03(\x0c\"\x1e\n\x0eInferenceReply\x12\x0c\n\x04pred\x18\x01 \x03(\t2D\n\x0fInferenceServer\x12\x31\n\tinference\x12\x11.InferenceRequest\x1a\x0f.InferenceReply\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0finference.proto\x12\x11image_recognition\"7\n\x0cImageRequest\x12\x12\n\nimage_data\x18\x01 \x01(\x0c\x12\x13\n\x0bsearch_flag\x18\x02 \x01(\x08\"}\n\rImageResponse\x12\x17\n\x0frecognized_text\x18\x01 \x01(\t\x12\x14\n\x0cmarked_image\x18\x02 \x01(\x0c\x12\x13\n\x0b\x61ttribute_1\x18\x03 \x01(\t\x12\x13\n\x0b\x61ttribute_2\x18\x04 \x01(\t\x12\x13\n\x0b\x61ttribute_3\x18\x05 \x01(\t2n\n\x17ImageRecognitionService\x12S\n\x0eRecognizeImage\x12\x1f.image_recognition.ImageRequest\x1a .image_recognition.ImageResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'inference_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_INFERENCEREQUEST']._serialized_start=19
-  _globals['_INFERENCEREQUEST']._serialized_end=52
-  _globals['_INFERENCEREPLY']._serialized_start=54
-  _globals['_INFERENCEREPLY']._serialized_end=84
-  _globals['_INFERENCESERVER']._serialized_start=86
-  _globals['_INFERENCESERVER']._serialized_end=154
+  _globals['_IMAGEREQUEST']._serialized_start=38
+  _globals['_IMAGEREQUEST']._serialized_end=93
+  _globals['_IMAGERESPONSE']._serialized_start=95
+  _globals['_IMAGERESPONSE']._serialized_end=220
+  _globals['_IMAGERECOGNITIONSERVICE']._serialized_start=222
+  _globals['_IMAGERECOGNITIONSERVICE']._serialized_end=332
 # @@protoc_insertion_point(module_scope)

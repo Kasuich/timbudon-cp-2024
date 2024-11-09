@@ -163,6 +163,9 @@ cython_debug/
 
 .env
 
+ml_predictor/models_and_logs
+ml_predictor/paddle_ocr_weights
+
 logs/*
 
 test/imags/*
