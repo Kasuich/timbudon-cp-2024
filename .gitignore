@@ -162,3 +162,7 @@ cython_debug/
 .idea/
 
 .env
+
+# Weights for model in Ml Predictor 
+
+./ml_predictor/weights
