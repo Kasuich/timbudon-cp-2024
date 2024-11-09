@@ -1,0 +1,9 @@
+model_name: "clip-ViT-B-16"
+test_images_folder: "test/images"
+train_images_folder: "train/images"
+emb_output_folder: "embeddings_vit"
+train_labels_folder: "train/labels"
+train_labels_with_text_folder: "train/labels_with_text"
+output_excel: "results.xlsx"
+n_neighbors: 10
+threshold: 33.8
