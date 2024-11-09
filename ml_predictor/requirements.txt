@@ -4,3 +4,22 @@ pillow==10.2.0
 --find-links https://download.pytorch.org/whl/torch_stable.html
 torch==2.3.1+cpu
 torchvision==0.18.1+cpu
+tensorflow
+python-Levenshtein
+ultralytics
+typing
+scikit-learn
+opencv-python
+matplotlib
+numpy
+pandas
+torch
+typer
+loguru
+sentence-transformers
+paddlepaddle
+paddleocr
+Pillow
+tqdm
+pickle
+pyyaml
