@@ -163,7 +163,16 @@ cython_debug/
 
 .env
 
-# Weights for model in Ml Predictor 
-
 ml_predictor/models_and_logs
 ml_predictor/paddle_ocr_weights
+
+logs/*
+
+test/imags/*
+
+train/imgs/*
+train/labels/*
+train/labels_with_text/*
+*.pkl
+*.pt
+*.xlsx
