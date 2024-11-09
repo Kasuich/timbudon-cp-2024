@@ -26,7 +26,6 @@ class InferenceService(InferenceServer):
 
     async def inference(self, request: InferenceRequest, context) -> InferenceReply:
 
-        # TODO: implement inference
         logging.info(f"Received request")
         start = perf_counter()
         images = list(map(self.open_image, request.image))
