@@ -6,14 +6,14 @@ services:
     ports:
       - "50052:50052"
   
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile 
-    ports:
-      - "8000:8000"
-    depends_on:
-      - ml_predictor
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile 
+  #   ports:
+  #     - "8000:8000"
+  #   depends_on:
+  #     - ml_predictor
 
   streamlit:
     build: 
@@ -22,4 +22,4 @@ services:
     ports:
       - "8501:8501"
     depends_on:
-      - backend
+      - ml_predictor

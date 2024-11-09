@@ -4,7 +4,7 @@ import io
 
 from utils.send import run_grpc_client
 from utils.results import display_image_response
-
+st.set_page_config(layout="wide")
 st.markdown(
     """
     <h1 style="font-size: calc(28px + 2vw); text-align: center; margin: 10px 0;">
@@ -17,7 +17,7 @@ option = st.selectbox("Выберите действие:", ("Загрузить
 
 if option == "Загрузить изображение":
     uploaded_file = st.file_uploader("Выберите изображение", type=["jpg", "jpeg", "png"])
-    enable = st.checkbox("Делать посик по exel")
+    enable = st.checkbox("Делать поиск по excel")
     if uploaded_file is not None:
         with Image.open(uploaded_file) as img:
             byte_io = io.BytesIO()
@@ -28,6 +28,7 @@ if option == "Загрузить изображение":
             image=image_bytes,
             search_flag=enable,
         )
+        
         display_image_response(responce)
 
 elif option == "Сделать фотографию":

@@ -5,16 +5,19 @@ from io import BytesIO
 from time import perf_counter
 
 import grpc
-from model.base_model import BaseModel
-from model.dummy_model import DummyModel
-from pb.inference_pb2 import InferenceReply, InferenceRequest
-from pb.inference_pb2_grpc import InferenceServer, add_InferenceServerServicer_to_server
+from model.base_model import BaseModel, PredictResult
+from model.placeholder_model import PlaceholderModel
+from pb.inference_pb2 import ImageRequest, ImageResponse
+from pb.inference_pb2_grpc import (
+    ImageRecognitionServiceServicer,
+    add_ImageRecognitionServiceServicer_to_server,
+)
 from PIL import Image
 
 logging.basicConfig(level=logging.INFO)
 
 
-class InferenceService(InferenceServer):
+class InferenceService(ImageRecognitionServiceServicer):
 
     def __init__(self, model: BaseModel):
         self._model = model
@@ -24,20 +27,27 @@ class InferenceService(InferenceServer):
         image = Image.open(BytesIO(image))
         return image
 
-    async def inference(self, request: InferenceRequest, context) -> InferenceReply:
+    async def RecognizeImage(self, request: ImageRequest, context) -> ImageResponse:
 
         logging.info(f"Received request")
         start = perf_counter()
-        images = list(map(self.open_image, request.image))
-        preds = self._model.predict(images)
+        image = self.open_image(request.image_data)
+        preds: PredictResult = self._model.predict(image)
         logging.info(f"Done in {(perf_counter() - start) * 1000:.2f}ms")
-        return InferenceReply(pred=preds)
+
+        response = ImageResponse()
+        response.recognized_text = preds.raw_text
+        response.marked_image = preds.pred_img
+        response.attribute_1 = preds.attribute1
+        response.attribute_2 = preds.attribute2
+        response.attribute_3 = preds.attribute3
+        return response
 
 
 async def serve():
-    model = DummyModel()
+    model = PlaceholderModel()
     server = grpc.aio.server(futures.ThreadPoolExecutor(max_workers=10))
-    add_InferenceServerServicer_to_server(InferenceService(model=model), server)
+    add_ImageRecognitionServiceServicer_to_server(InferenceService(model=model), server)
     adddress = "[::]:50052"
     server.add_insecure_port(adddress)
     logging.info(f" Starting server on {adddress}")

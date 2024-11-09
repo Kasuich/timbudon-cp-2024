@@ -29,8 +29,8 @@ if _version_not_supported:
     )
 
 
-class InferenceServerStub(object):
-    """The inference service definition."""
+class ImageRecognitionServiceStub(object):
+    """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
         """Constructor.
@@ -38,45 +38,47 @@ class InferenceServerStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.inference = channel.unary_unary(
-            "/InferenceServer/inference",
-            request_serializer=inference__pb2.InferenceRequest.SerializeToString,
-            response_deserializer=inference__pb2.InferenceReply.FromString,
+        self.RecognizeImage = channel.unary_unary(
+            "/image_recognition.ImageRecognitionService/RecognizeImage",
+            request_serializer=inference__pb2.ImageRequest.SerializeToString,
+            response_deserializer=inference__pb2.ImageResponse.FromString,
             _registered_method=True,
         )
 
 
-class InferenceServerServicer(object):
-    """The inference service definition."""
+class ImageRecognitionServiceServicer(object):
+    """Missing associated documentation comment in .proto file."""
 
-    def inference(self, request, context):
-        """Sends an inference reply"""
+    def RecognizeImage(self, request, context):
+        """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details("Method not implemented!")
         raise NotImplementedError("Method not implemented!")
 
 
-def add_InferenceServerServicer_to_server(servicer, server):
+def add_ImageRecognitionServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-        "inference": grpc.unary_unary_rpc_method_handler(
-            servicer.inference,
-            request_deserializer=inference__pb2.InferenceRequest.FromString,
-            response_serializer=inference__pb2.InferenceReply.SerializeToString,
+        "RecognizeImage": grpc.unary_unary_rpc_method_handler(
+            servicer.RecognizeImage,
+            request_deserializer=inference__pb2.ImageRequest.FromString,
+            response_serializer=inference__pb2.ImageResponse.SerializeToString,
         ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-        "InferenceServer", rpc_method_handlers
+        "image_recognition.ImageRecognitionService", rpc_method_handlers
     )
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers("InferenceServer", rpc_method_handlers)
+    server.add_registered_method_handlers(
+        "image_recognition.ImageRecognitionService", rpc_method_handlers
+    )
 
 
 # This class is part of an EXPERIMENTAL API.
-class InferenceServer(object):
-    """The inference service definition."""
+class ImageRecognitionService(object):
+    """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def inference(
+    def RecognizeImage(
         request,
         target,
         options=(),
@@ -91,9 +93,9 @@ class InferenceServer(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            "/InferenceServer/inference",
-            inference__pb2.InferenceRequest.SerializeToString,
-            inference__pb2.InferenceReply.FromString,
+            "/image_recognition.ImageRecognitionService/RecognizeImage",
+            inference__pb2.ImageRequest.SerializeToString,
+            inference__pb2.ImageResponse.FromString,
             options,
             channel_credentials,
             insecure,
