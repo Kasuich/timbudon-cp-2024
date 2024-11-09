@@ -87,3 +87,7 @@ venv/
 
 # VS Code
 .vscode/
+
+# Weights for model in Ml Predictor 
+
+ml_predictor/models_and_logs

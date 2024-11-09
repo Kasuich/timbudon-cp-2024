@@ -14,9 +14,9 @@ import typer
 from loguru import logger
 from matplotlib.patches import Rectangle
 
-# from model.base_model import BaseModel
 from sentence_transformers import SentenceTransformer
 from dataclasses import dataclass
+import io
 import abc
 from paddleocr import PaddleOCR
 from PIL import Image
@@ -24,7 +24,7 @@ from sklearn.metrics import accuracy_score, pairwise_distances
 from tqdm import tqdm
 import pickle
 import yaml
-from model.base_model import BaseModel
+from model.base_model import BaseModel, PredictResult
 
 
 class Segmentation:
@@ -99,11 +99,11 @@ class OcrBD:
 
     def __init__(self) -> None:
         self.model = SentenceTransformer("clip-ViT-B-16")
-        self.emb_output_folder = "embeddings_vit"
-        self.test_images_folder = "test/images"
-        self.train_labels_folder = "train/labels"
-        self.train_labels_with_text_folder = "train/labels_with_text"
-        self.config_path = "config.yaml"
+        self.emb_output_folder = "./models_and_logs/embeddings_vit"
+        self.test_images_folder = "./models_and_logs/test/images"
+        self.train_labels_folder = "./models_and_logs/train/labels"
+        self.train_labels_with_text_folder = "./models_and_logs/train/labels_with_text"
+        self.config_path = "./models_and_logs/config.yaml"
         with open(self.config_path, "r") as file:
             self.config = yaml.safe_load(file)
         logger.info("Loaded configuration from {}", self.config_path)
@@ -196,7 +196,7 @@ class OcrBD:
 
         logger.info("Embeddings were read")
 
-        test_filenames = self.load_image_filenames(config["test_images_folder"])
+        # test_filenames = self.load_image_filenames(config["test_images_folder"])
         train_filenames = self.load_image_filenames(config["train_images_folder"])
 
         train_labels = self.load_labels(
@@ -228,7 +228,7 @@ class OcrBD:
                     ]
                 )
             else:
-                results.append([test_filenames[test_idx], None, None, None])
+                results.append([None, None, None, None])
 
         df = pd.DataFrame(
             results, columns=["Test_Embedding", "Label", "Label_With_Text", "Neighbour"]
@@ -242,7 +242,7 @@ class OcrBD:
 class OcrPipeline(BaseModel):
 
     def __init__(self) -> None:
-        self.weights = "../../sergey/runs/segment/train3/weights/best.pt"
+        self.weights = "./models_and_logs/best.pt"
 
     def predict(
         self, image: Image.Image, search_in_data: bool, dist_threshold: float
@@ -253,5 +253,14 @@ class OcrPipeline(BaseModel):
         result = model_neighbour.predict(
             image, search_in_data=False, dist_threshold=10.5
         )
-        res = PredictResult(raw_text=result["Label_With_Text"])
+        with Image.open("photo_2024-11-09_18-54-13.jpg") as img:
+            byte_io = io.BytesIO()
+            img.save(byte_io, format="JPEG")
+            image_bytes = byte_io.getvalue()
+            
+        # TODO: Вставить картинку, полученную на инференсе 
+        res = PredictResult(
+            raw_text=result["Label_With_Text"],
+            pred_img=image_bytes,
+        )
         return res

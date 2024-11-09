@@ -10,13 +10,13 @@ from torchvision.models import ResNet34_Weights, resnet34
 
 @dataclass
 class PredictResult:
-    raw_text: str
+    raw_text: str | None = None
     # image in bytes with boxes and text on it
-    pred_img: str
+    pred_img: str | None = None
     # unknow data from excel, None if search_in_data is False
-    attribute1: str | None
-    attribute2: str | None
-    attribute3: str | None
+    attribute1: str | None = None
+    attribute2: str | None = None
+    attribute3: str | None = None
 
 
 class BaseModel(abc.ABC):

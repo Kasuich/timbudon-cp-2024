@@ -1,19 +1,17 @@
 grpcio==1.67.1
 grpcio-tools==1.67.1
 pillow==10.2.0
---find-links https://download.pytorch.org/whl/torch_stable.html
-torch==2.3.1+cpu
-torchvision==0.18.1+cpu
 tensorflow
 python-Levenshtein
 ultralytics
 typing
 scikit-learn
+tf-keras
+openpyxl
 opencv-python
 matplotlib
-numpy
+numpy== 1.26.4
 pandas
-torch
 typer
 loguru
 sentence-transformers
@@ -21,5 +19,7 @@ paddlepaddle
 paddleocr
 Pillow
 tqdm
-pickle
 pyyaml
+--find-links https://download.pytorch.org/whl/torch_stable.html
+torch==2.3.1+cpu
+torchvision==0.18.1+cpu

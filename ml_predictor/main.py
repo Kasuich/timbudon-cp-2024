@@ -6,7 +6,7 @@ from time import perf_counter
 
 import grpc
 from model.base_model import BaseModel, PredictResult
-from model.placeholder_model import PlaceholderModel
+from model.ocr_pipeline import OcrPipeline
 from pb.inference_pb2 import ImageRequest, ImageResponse
 from pb.inference_pb2_grpc import (
     ImageRecognitionServiceServicer,
@@ -32,7 +32,8 @@ class InferenceService(ImageRecognitionServiceServicer):
         logging.info(f"Received request")
         start = perf_counter()
         image = self.open_image(request.image_data)
-        preds: PredictResult = self._model.predict(image)
+        # TODO: Adjust parameters where all features of model will be ready
+        preds: PredictResult = self._model.predict(image, False, 0)
         logging.info(f"Done in {(perf_counter() - start) * 1000:.2f}ms")
 
         response = ImageResponse()
@@ -45,7 +46,7 @@ class InferenceService(ImageRecognitionServiceServicer):
 
 
 async def serve():
-    model = PlaceholderModel()
+    model = OcrPipeline()
     server = grpc.aio.server(futures.ThreadPoolExecutor(max_workers=10))
     add_ImageRecognitionServiceServicer_to_server(InferenceService(model=model), server)
     adddress = "[::]:50052"

@@ -165,4 +165,4 @@ cython_debug/
 
 # Weights for model in Ml Predictor 
 
-ml_predictor/weights
+ml_predictor/models_and_logs
