@@ -1,10 +1,10 @@
 .PHONY: docker_up
 docker_up:
-	docker compose up --build
+	sudo docker compose up --build
 
 .PHONY: docker_up_d
 docker_up_d:
-	docker compose up --build -d
+	sudo docker compose up --build -d
 
 .PHONY: update_proto
 update_proto:
