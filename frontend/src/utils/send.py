@@ -12,5 +12,5 @@ def run_grpc_client(image: bytes, search_flag: bool = False):
                 search_flag=search_flag,
             )
         )
-        print(response)
+
         return response

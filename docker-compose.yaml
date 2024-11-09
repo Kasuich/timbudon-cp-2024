@@ -5,6 +5,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "50052:50052"
+    volumes:
+      - ./ml_predictor/models_and_logs:/app/models_and_logs
+      - ./paddle_ocr_weights:/root/.paddleocr/whl
   
   # backend:
   #   build:

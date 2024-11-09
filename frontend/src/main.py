@@ -5,6 +5,17 @@ import io
 from utils.send import run_grpc_client
 from utils.results import display_image_response
 st.set_page_config(layout="wide")
+
+st.markdown(
+    """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 st.markdown(
     """
     <h1 style="font-size: calc(28px + 2vw); text-align: center; margin: 10px 0;">
