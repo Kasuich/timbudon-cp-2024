@@ -11,7 +11,7 @@ class BaseModel(abc.ABC):
 
     @abc.abstractmethod
     def predict(
-        self, images: list[Image.Image], search_in_data: bool, dist_threshold: float
+        self, images: Image.Image, search_in_data: bool, dist_threshold: float
     ) -> list[str]:
         """Get predict from ML OCR Model
 
