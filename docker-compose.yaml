@@ -15,6 +15,15 @@ services:
     depends_on:
       - ml_predictor
 
+  streamlit:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8501:8501"
+    depends_on:
+      - backend
+
   setup:
     image: ghcr.io/hirotasoshu/elasticsearch:8.10.3
     volumes:

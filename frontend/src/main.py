@@ -1,26 +1,46 @@
 import streamlit as st
 from PIL import Image
+import io
 
 from utils.send import run_grpc_client
+from utils.results import display_image_response
 
-st.title("Фотографирование или загрузка изображения")
-
+st.markdown(
+    """
+    <h1 style="font-size: calc(28px + 2vw); text-align: center; margin: 10px 0;">
+        Распознавание маркировки
+    </h1>
+    """,
+    unsafe_allow_html=True
+)
 option = st.selectbox("Выберите действие:", ("Загрузить изображение", "Сделать фотографию"))
-enable = st.checkbox("Делать посик по exel")
 
 if option == "Загрузить изображение":
     uploaded_file = st.file_uploader("Выберите изображение", type=["jpg", "jpeg", "png"])
+    enable = st.checkbox("Делать посик по exel")
     if uploaded_file is not None:
-        image = Image.open(uploaded_file)
-        st.image(image, caption='Загруженное изображение', use_container_width=True)
+        with Image.open(uploaded_file) as img:
+            byte_io = io.BytesIO()
+            img.save(byte_io, format='JPEG')
+            image_bytes = byte_io.getvalue()
+
+        responce = run_grpc_client(
+            image=image_bytes,
+            search_flag=enable,
+        )
+        display_image_response(responce)
 
 elif option == "Сделать фотографию":
     picture = st.camera_input("Сделайте фотографию")
+    enable = st.checkbox("Делать посик по exel")
     if picture is not None:
         bytes_data = picture.getvalue()
-        run_grpc_client(
+
+        responce = run_grpc_client(
             image=bytes_data,
             search_flag=enable,
         )
+        display_image_response(responce)
+
 
     

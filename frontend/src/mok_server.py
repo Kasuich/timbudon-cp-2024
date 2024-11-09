@@ -4,12 +4,22 @@ import time
 import pb.predict_pb2 as predict_pb2
 import pb.predict_pb2_grpc as predict_pb2_grpc
 
+from PIL import Image
+import io
+
 class ImageRecognition(predict_pb2_grpc.ImageRecognitionServiceServicer):
     def RecognizeImage(self, request, context):
 
         response = predict_pb2.ImageResponse()
         response.recognized_text = "Пример распознанного текста"
-        response.marked_image = b'...'  # Здесь вы можете добавить байты изображения
+
+        image_path = 'photo_2024-11-09_08-57-23.jpg'
+        with Image.open(image_path) as img:
+            byte_io = io.BytesIO()
+            img.save(byte_io, format='JPEG')
+            image_bytes = byte_io.getvalue()
+        response.marked_image = image_bytes
+        
         response.attribute_1 = "Атрибут 1"
         response.attribute_2 = "Атрибут 2"
         response.attribute_3 = "Атрибут 3"
