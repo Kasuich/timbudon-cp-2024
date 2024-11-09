@@ -100,7 +100,7 @@ class OcrBD:
     def __init__(self) -> None:
         self.model = SentenceTransformer("clip-ViT-B-16")
         self.emb_output_folder = "embeddings_vit"
-        self.test_images_folder = "test/images"
+        # self.test_images_folder = "test/images"
         self.train_labels_folder = "train/labels"
         self.train_labels_with_text_folder = "train/labels_with_text"
         self.config_path = "config.yaml"
@@ -196,7 +196,7 @@ class OcrBD:
 
         logger.info("Embeddings were read")
 
-        test_filenames = self.load_image_filenames(config["test_images_folder"])
+        # test_filenames = self.load_image_filenames(config["test_images_folder"])
         train_filenames = self.load_image_filenames(config["train_images_folder"])
 
         train_labels = self.load_labels(
@@ -228,7 +228,7 @@ class OcrBD:
                     ]
                 )
             else:
-                results.append([test_filenames[test_idx], None, None, None])
+                results.append([None, None, None, None])
 
         df = pd.DataFrame(
             results, columns=["Test_Embedding", "Label", "Label_With_Text", "Neighbour"]
