@@ -27,7 +27,7 @@ class InferenceService(ImageRecognitionServiceServicer):
         image = Image.open(BytesIO(image))
         return image
 
-    async def inference(self, request: ImageRequest, context) -> ImageResponse:
+    async def RecognizeImage(self, request: ImageRequest, context) -> ImageResponse:
 
         logging.info(f"Received request")
         start = perf_counter()
@@ -36,7 +36,7 @@ class InferenceService(ImageRecognitionServiceServicer):
         logging.info(f"Done in {(perf_counter() - start) * 1000:.2f}ms")
 
         response = ImageResponse()
-        response.recognized_text()
+        response.recognized_text = preds.raw_text
         response.marked_image = preds.pred_img
         response.attribute_1 = preds.attribute1
         response.attribute_2 = preds.attribute2
