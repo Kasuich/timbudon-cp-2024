@@ -163,4 +163,13 @@ cython_debug/
 
 .env
 
-logs/
+logs/*
+
+test/imags/*
+
+train/imgs/*
+train/labels/*
+train/labels_with_text/*
+*.pkl
+*.pt
+*.xlsx
