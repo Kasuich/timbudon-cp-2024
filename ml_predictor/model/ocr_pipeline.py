@@ -283,7 +283,7 @@ def replace_words_by_similarity(label_text: str, text_list: List[str]) -> str:
     return ' '.join(replaced_words)
 
 class Excel:
-    def init(self, db_path: str):
+    def __init__(self, db_path: str):
         db = pd.read_excel(db_path)
         db["ДетальАртикул"] = db["ДетальАртикул"].map(lambda x: x[1:-1].split(" ")[0] if "ТС" in x else x[1:-1])
         self.db = db
@@ -308,7 +308,7 @@ class OcrPipeline(BaseModel):
     def __init__(self) -> None:
         self.weights_seg = "./models_and_logs/best.pt"
         self.weights_det = "./models_and_logs/best_det.pt"
-        self.db_path = "db.xlsx"
+        self.db_path = "./static/orders.xlsx"
 
     def predict(
         self, image: Image.Image, search_in_data: bool, dist_threshold: float
