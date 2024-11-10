@@ -8,6 +8,7 @@ typing
 scikit-learn
 tf-keras
 openpyxl
+python-dotenv
 opencv-python
 matplotlib
 numpy== 1.26.4
