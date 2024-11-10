@@ -7,7 +7,7 @@ services:
       - "50052:50052"
     volumes:
       - ./ml_predictor/models_and_logs:/app/models_and_logs
-      - ./paddle_ocr_weights:/root/.paddleocr/whl
+      - ./ml_predictor/paddle_ocr_weights:/root/.paddleocr/whl
   
   # backend:
   #   build:
@@ -26,3 +26,23 @@ services:
       - "8501:8501"
     depends_on:
       - ml_predictor
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "8080:80"
+      - "8000:443"  
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./certbot/conf:/etc/letsencrypt  
+      - ./certbot/www:/var/www/certbot  
+    depends_on:
+      - streamlit
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot

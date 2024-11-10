@@ -176,3 +176,11 @@ train/labels_with_text/*
 *.pkl
 *.pt
 *.xlsx
+
+# nginx
+*param*.pem
+sites-enabled/
+modules-enabled/
+modules-available/
+
+certbot/conf/
