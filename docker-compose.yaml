@@ -8,15 +8,6 @@ services:
     volumes:
       - ./ml_predictor/models_and_logs:/app/models_and_logs
       - ./ml_predictor/paddle_ocr_weights:/root/.paddleocr/whl
-  
-  # backend:
-  #   build:
-  #     context: ./backend
-  #     dockerfile: Dockerfile 
-  #   ports:
-  #     - "8000:8000"
-  #   depends_on:
-  #     - ml_predictor
 
   streamlit:
     build: 
