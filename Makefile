@@ -6,6 +6,10 @@ docker_up:
 docker_up_d:
 	sudo docker compose up --build -d
 
+.PHONY: docker_down
+docker_down:
+	sudo docker compose down
+
 .PHONY: update_proto
 update_proto:
 	python -m grpc_tools.protoc -Iprotos --python_out=ml_predictor/pb --pyi_out=ml_predictor/pb --grpc_python_out=ml_predictor/pb protos/inference.proto
