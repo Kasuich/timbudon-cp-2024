@@ -333,7 +333,7 @@ class OcrPipeline(BaseModel):
             raw_text=new_label_text,
             pred_img=image_bytes,
             attribute1=info["ДетальНаименование"],
-            attribute1=info["ЗаказНомер"],
-            attribute1=info["СтанцияБлок"]
+            attribute2=info["ЗаказНомер"],
+            attribute3=info["СтанцияБлок"]
         )
         return res
