@@ -3,7 +3,6 @@ from PIL import Image
 import io
 import base64
 
-
 import pb.predict_pb2 as predict_pb2
 
 def display_image_response(image_response: predict_pb2.ImageResponse):
@@ -50,7 +49,7 @@ def display_image_response(image_response: predict_pb2.ImageResponse):
     st.markdown(
         """
         <div style="text-align: center; margin-bottom: 20px;">
-            <img src="data:image/png;base64,{}" style="border: 2px solid #4CAF50; border-radius: 10px;"/>
+            <img src="data:image/png;base64,{}" style="border: 2px solid #4CAF50; border-radius: 10px; width: 600px; height: auto;"/>
         </div>
         """.format(img_str),  # Предполагается, что у вас есть base64 строка изображения
         unsafe_allow_html=True
