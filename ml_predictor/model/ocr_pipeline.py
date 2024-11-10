@@ -28,49 +28,81 @@ from model.base_model import BaseModel, PredictResult
 
 
 class Segmentation:
-    def __init__(self, weights_yolo_path: str):
-        self.model = YOLO(weights_yolo_path)
-        self.data = {}
-
+    def __init__(self, weights_yolo_seg_path: str):
+        self.model_seg = YOLO(weights_yolo_seg_path)
+        
     def get_segmentation(self) -> None:
-        result = self.model(self.image, conf=0.7)
+        result = self.model_seg(self.image, conf=0.7)
         if len(result[0]):
             object_masks = np.array(result[0].masks.xy, dtype=object)
-            self.data["masks"] = object_masks
+            self.data["segment_points"] = object_masks 
         else:
-            self.data["masks"] = []
+            self.data["segment_points"] = []
+
+    def make_filter_detect(self):
+        image = np.array(self.image)
+        mask = self.data["mask"]
+        mask_bin = (mask > 0).astype(np.uint8) * 255
+        contours, _ = cv2.findContours(mask_bin, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        cv2.drawContours(image, contours, -1, (0, 0, 255), thickness=5)
+        mask = np.repeat(mask[:, :, np.newaxis], 3, axis=2)
+        mask = 0.5 * (mask > 0) + 0.5
+        new_image = (image * mask).astype("int32")
+        cv2.imwrite('output_image.jpg', new_image)
+    
+class Detection:
+    def __init__(self, weights_yolo_det_path: str):
+        self.model_det = YOLO(weights_yolo_det_path)
+        
+    def get_detection(self) -> None:
+        result = self.model_det(self.image)
+        if len(result[0]):
+            object_box = np.array(result[0].boxes.xywhn.to("cpu").detach().numpy(), dtype=object)
+            self.data["box_xywhn"] = ['\n'.join([f"{0} {x} {y} {w} {h}" for x, y, w, h in object_box])]
+        else:
+            self.data["box_xywhn"] = []
 
 
-class OCR(Segmentation):
-    def __init__(self, weights_yolo_path: str, image: Image.Image):
-        super().__init__(weights_yolo_path)
-        self.ocr = PaddleOCR(use_gpu=True, lang="en")
+class OCR(Segmentation, Detection):
+    def __init__(self, 
+                 weights_yolo_seg_path: str, 
+                 weights_yolo_det_path: str,
+                 image: Image.Image):
+        Segmentation.__init__(self, weights_yolo_seg_path)
+        Detection.__init__(self, weights_yolo_det_path)
+        self.ocr = PaddleOCR(use_gpu=True, lang="en")  
         self.image = image
+        self.data = {}
         self.get_segmentation()
+        self.get_detection()
         self.crop_one_img()
         self.ocr_one_img()
+        self.make_filter_detect()
 
     def get_mask(self) -> np.array:
         mask = np.zeros((self.image.size[1], self.image.size[0]), dtype=np.uint8)
-        for object in self.data["masks"]:
-            points = np.array([[x, y] for x, y in object], dtype=np.int32)
+        for object in self.data["segment_points"]:
+            points = np.array(
+                [[x, y] for x, y in object], dtype=np.int32
+            )
             mask = cv2.fillPoly(mask, [points], color=255)
-
+        self.data["mask"] = mask
+        
         return mask
-
+    
     def crop_one_img(self) -> None:
-        mask = np.array(self.get_mask()) > 0
+        mask = (np.array(self.get_mask()) > 0)
         mask = np.expand_dims(mask, axis=-1)
         image = self.image * mask
-        if len(self.data["masks"]):
-            x = np.array([x for obj in self.data["masks"] for x, y in obj])
-            y = np.array([y for obj in self.data["masks"] for x, y in obj])
+        if len(self.data["segment_points"]):
+            x = np.array([x for obj in self.data["segment_points"] for x, y in obj])
+            y = np.array([y for obj in self.data["segment_points"] for x, y in obj])
             x_min, x_max = int(min(x)), int(max(x))
             y_min, y_max = int(min(y)), int(max(y))
             self.data["crop_img"] = image[y_min:y_max, x_min:x_max, :]
         else:
             self.data["crop_img"] = image
-
+    
     def ocr_one_img(self) -> None:
         crop_image = np.array(self.data["crop_img"])
         orig_image = np.array(self.image)
@@ -238,29 +270,43 @@ class OcrBD:
         logger.info("Saved results to Excel: {}", config["output_excel"])
         return df
 
+def replace_words_by_similarity(label_text: str, text_list: List[str]) -> str:
+    words = label_text.split()
+    replaced_words = []
+    for word in words:
+        candidates = [text for text in text_list if len(text) == len(word)]
+        if candidates:
+            closest_match = min(candidates, key=lambda x: Levenshtein.distance(word, x))
+            replaced_words.append(closest_match)
+        else:
+            replaced_words.append(word)
+    return ' '.join(replaced_words)
 
 class OcrPipeline(BaseModel):
 
     def __init__(self) -> None:
-        self.weights = "./models_and_logs/best.pt"
+        self.weights_seg = "./models_and_logs/best.pt"
+        self.weights_det = "./models_and_logs/best_det.pt"
 
     def predict(
         self, image: Image.Image, search_in_data: bool, dist_threshold: float
     ) -> PredictResult:
-        ocr = OCR(self.weights, image)
+        ocr = OCR(self.weights_seg, self.weights_det, image)
         dict_text = ocr.get_text()
         model_neighbour = OcrBD()
         result = model_neighbour.predict(
             image, search_in_data=False, dist_threshold=10.5
         )
-        with Image.open("photo_2024-11-09_18-54-13.jpg") as img:
+
+        with Image.open("output_image.jpg") as img:
             byte_io = io.BytesIO()
             img.save(byte_io, format="JPEG")
-            image_bytes = byte_io.getvalue()
-            
-        # TODO: Вставить картинку, полученную на инференсе 
+            image_bytes = byte_io.getvalue() 
+
+        neighbour_text = result["Label_With_Text"].iloc[0][1:-1]
+        new_label_text = replace_words_by_similarity(neighbour_text, dict_text["text_orig_img"])
         res = PredictResult(
-            raw_text=result["Label_With_Text"].iloc[0],
+            raw_text=new_label_text,
             pred_img=image_bytes,
         )
         return res
