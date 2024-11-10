@@ -282,11 +282,33 @@ def replace_words_by_similarity(label_text: str, text_list: List[str]) -> str:
             replaced_words.append(word)
     return ' '.join(replaced_words)
 
+class Excel:
+    def init(self, db_path: str):
+        db = pd.read_excel(db_path)
+        db["ДетальАртикул"] = db["ДетальАртикул"].map(lambda x: x[1:-1].split(" ")[0] if "ТС" in x else x[1:-1])
+        self.db = db
+
+    def get_info_from_db(self, detail_text: str):
+        split_idx = detail_text.find(" ")
+        part1, part2 = detail_text[:split_idx], detail_text[split_idx + 1:]
+        info_art = self.db[self.db["ДетальАртикул"] == part1] 
+        info_num = info_art[info_art["ПорядковыйНомер"] == part2]
+
+        if info_num.shape[0]:
+            return info_num.iloc[0].to_dict()
+
+        if info_art.shape[0]:
+            return info_art.iloc[0].to_dict()
+        
+        return {"ДетальНаименование": "Не найдено", "ЗаказНомер": "Не найдено", "СтанцияБлок": "Не найдено"}
+
+
 class OcrPipeline(BaseModel):
 
     def __init__(self) -> None:
         self.weights_seg = "./models_and_logs/best.pt"
         self.weights_det = "./models_and_logs/best_det.pt"
+        self.db_path = "db.xlsx"
 
     def predict(
         self, image: Image.Image, search_in_data: bool, dist_threshold: float
@@ -305,8 +327,13 @@ class OcrPipeline(BaseModel):
 
         neighbour_text = result["Label_With_Text"].iloc[0][1:-1]
         new_label_text = replace_words_by_similarity(neighbour_text, dict_text["text_orig_img"])
+        excel = Excel(self.db_path)
+        info = excel.get_info_from_db(new_label_text)
         res = PredictResult(
             raw_text=new_label_text,
             pred_img=image_bytes,
+            attribute1=info["ДетальНаименование"],
+            attribute1=info["ЗаказНомер"],
+            attribute1=info["СтанцияБлок"]
         )
         return res
