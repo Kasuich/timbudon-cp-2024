@@ -1,0 +1,28 @@
+services:
+  ml_predictor:
+    build:
+      context: ./ml_predictor
+      dockerfile: Dockerfile
+    ports:
+      - "50052:50052"
+    volumes:
+      - ./ml_predictor/models_and_logs:/app/models_and_logs
+      - ./ml_predictor/paddle_ocr_weights:/root/.paddleocr/whl
+  
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile 
+  #   ports:
+  #     - "8000:8000"
+  #   depends_on:
+  #     - ml_predictor
+
+  streamlit:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8501:8501"
+    depends_on:
+      - ml_predictor
