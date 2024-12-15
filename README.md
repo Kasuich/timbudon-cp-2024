@@ -45,3 +45,11 @@
 1. Заполнить файл `.env` по примеру из `.env.example`
 2. `make docker_up_d`
 3. фронтенд доступен на http://localhost:8501
+
+### Состав команды
+
+1. Николай Александров - ML Engineer
+2. Сергей Мартынов - Ml Engineer 
+3. Роман Шинкаренко - Ml Engineer, Backend
+4. Артем Цыканов - Ml Engineer, Frontend, Backend
+5. Иван Плешаков - Ml Engineer
